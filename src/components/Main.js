@@ -4,16 +4,16 @@ require('styles/App.css');
 import React from 'react';
 import Board from './Board';
 
-var App = React.createClass({
+class App extends React.Component{
 
-  render: function() {
+  render() {
     return (
       <div>
-      <Board />
+      	<Board />
       </div>
     );
   }
 
-});
+}
 
 export default App;

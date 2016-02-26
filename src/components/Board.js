@@ -4,14 +4,15 @@ require('styles/App.css');
 import React from 'react';
 import Node from './Node';
 
-var Board = React.createClass({
+class Board extends React.Component{
 
-  getInitialState: function() {
-    var board = [];
-    for (var i=0; i<24; i++) {
+  constructor() {
+    super();
+    let board = [];
+    for (let i=0; i<24; i++) {
       board.push({"position": getPosition(i), "controllingPlayer":0});
     }
-    return {
+    this.state = {
       board: board,
       info: "Select a position for placement.",
       gamePhase: "I",
@@ -22,19 +23,19 @@ var Board = React.createClass({
       player2Nodes: 0,
       currentPlayer: 1
     }
-  },
+  }
 
-  getNextPlayer: function(player) {
+  getNextPlayer(player) {
     if (player === 1) {
       return 2;
     } else {
       return 1;
     }
-  },
+  }
 
-  millIsFormed: function(index) {
-    var board = this.state.board;
-    var player = board[index].controllingPlayer;
+  millIsFormed(index) {
+    let board = this.state.board;
+    const player = board[index].controllingPlayer;
     if ((index%2) == 0) {
       if (index == 2 || index == 4 || index == 10 || index == 12 || index == 18 || index == 20) {
         if ((board[index-1].controllingPlayer == player)&&(board[index-2].controllingPlayer == player)) {
@@ -79,9 +80,9 @@ var Board = React.createClass({
         }
       }
     }
-  },
+  }
 
-  playerMove: function(node) {
+  playerMove(node) {
     if (this.state.removingPhase) {
       if (this.state.board[node].controllingPlayer !== 0 && this.state.board[node].controllingPlayer !== this.state.currentPlayer) {
         if (this.state.board[node].controllingPlayer === 1) {
@@ -95,7 +96,7 @@ var Board = React.createClass({
         this.state.info="Select a position for placement.";
         this.forceUpdate();
       } else {
-        var info = this.state.info;
+        const info = this.state.info;
         this.setState({info:"Invalid selection!"});
         setTimeout(function() {this.setState({info:info})}.bind(this), 1500);
       }
@@ -122,31 +123,31 @@ var Board = React.createClass({
             this.state.gamePhase="II";
           }
         } else {
-          var info = this.state.info;
+          const info = this.state.info;
           this.setState({info:"Invalid placement!"});
           setTimeout(function() {this.setState({info:info})}.bind(this), 1500);
         }
       } else {this.state.info="Second game phase not yet implemented";}
     }
-  },
+  }
 
-  render: function() {
+  render() {
 
-    var quarters = [];
-    for (var i=0; i<4; i++) {
-      var quarter = <div className="quarter bi-2" key={i}/>
+    let quarters = [];
+    for (let i=0; i<4; i++) {
+      let quarter = <div className="quarter bi-2" key={i}/>
       quarters.push(quarter)
     }
-    var nodes = [];
-    for (var i=0; i<24; i++) {
-      var pos = this.state.board[i].position;
-      var player = this.state.board[i].controllingPlayer;
-      var node = <Node
+    let nodes = [];
+    for (let i=0; i<24; i++) {
+      const pos = this.state.board[i].position;
+      const player = this.state.board[i].controllingPlayer;
+      let node = <Node
         nodeNumber={i}
         key={'cell'+i}
         controllingPlayer={player}
         position={pos}
-        nodeIsClicked={this.playerMove}
+        nodeIsClicked={this.playerMove.bind(this)}
       />
       nodes.push(node)
     }
@@ -166,10 +167,11 @@ var Board = React.createClass({
     );
   }
 
-});
-var getPosition = function(index) {
-  var xPos = 0;
-  var yPos = 0;
+}
+
+let getPosition = function(index) {
+  let xPos = 0;
+  let yPos = 0;
   if (index == 0 || index == 1 || index == 2) {
     yPos = 0;
   } else if (index == 8 || index == 9 || index == 10) {
@@ -202,5 +204,6 @@ var getPosition = function(index) {
   }
 
   return { "xPos": xPos, "yPos": yPos};
-};
+}
+
 export default Board;
